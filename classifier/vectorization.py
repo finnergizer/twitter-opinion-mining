@@ -1,155 +1,119 @@
 __author__ = 'shaughnfinnerty'
-import csv
-from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
-import nltk
+
+from sklearn.feature_extraction.text import CountVectorizer
 from nltk.stem.snowball import EnglishStemmer
-import string
-import numpy
-import arff
-from sklearn.naive_bayes import GaussianNB
 import codecs
 import itertools
 import pickle
+import twitter_msg
+import tools
+from nltk.corpus import sentiwordnet as swn
 
-from sklearn import svm
-def unicode_csv_reader(utf8_data, dialect=csv.excel, **kwargs):
-    csv_reader = csv.reader(utf8_data, delimiter='\t', dialect=dialect,  **kwargs)
-    for row in csv_reader:
-        # yield [unicode(cell, 'utf-8') for cell in row]
-        ids.append(unicode(row[0],'utf-8'))
-        polarity.append(unicode(row[2],'utf-8'))
-        text.append(unicode(row[3],'utf-8'))
-        # print(row[3])
+class Vectorizer:
+    def __init__(self):
+        self.twitter_messages = []
+        self.feature_matrix_token_counts = None
+        self.token_feature_names = []
+        self.amount_of_token_features = 0
+        self.additional_features_names = []
+        self.additional_features = []
+
+
+    def read_twitter_messages_from_file(self, path_to_file):
+        all_twitter_messages = []
+        csv_reader = tools.unicode_csv_reader(open(path_to_file), delimiter='\t')
+        for row in csv_reader:
+            t = twitter_msg.TwitterMessage(row[0], row[1], row[3], row[2])
+            all_twitter_messages.append(t)
+
+        self.twitter_messages = all_twitter_messages
+        return all_twitter_messages
+
+
+    def create_feature_matrix_token_counts(self):
+        '''
+        Create a n by m matrix of n twitter messages with m features representing
+        count of preprocessed, stemmed, tokenized words
+        :return: n by m feature matrix of n twitter messages and m features (i.e. word tokens)
+        '''
+
+        #Create the basic count vectorizer so that we can copy its preprocessor and tokenizer
+        basic_vectorizer = CountVectorizer(stop_words='english')
+        preprocessor = basic_vectorizer.build_preprocessor();
+        tokenizer = basic_vectorizer.build_tokenizer();
+
+        #Create a stemmer for additional processing after preprocessing and tokenizer
+        stemmer = EnglishStemmer()
+
+        #Custom analyzer for Count Vectorizer which stems tokens after preprocessing
+        def stemming_analyzer(document):
+            return map(stemmer.stem, tokenizer(preprocessor(document)))
+
+        vectorizer = CountVectorizer(stop_words='english', min_df=4, analyzer=stemming_analyzer)
+
+        all_twitter_msg_text = [t.msg_text for t in self.twitter_messages]
+        self.feature_matrix_token_counts = vectorizer.fit_transform(all_twitter_msg_text)
+        self.token_feature_names = vectorizer.get_feature_names()
+        self.amount_of_token_features = len(self.token_feature_names)
+
+        return self.feature_matrix_token_counts
+
+    def add_additional_features(self):
+        all_additional_features = []
+        all_additional_feature_names = ["smilies", "exclamations", "questions",
+                                        "sadfaces", "posscore", "negscore",
+                                        "objscore"]
+        for document_index, twitter_document in enumerate(self.twitter_messages):
+            additional_features = {}
+            additional_features["smilies"] = twitter_document.msg_text.count(":)") + twitter_document.msg_text.count(":-)") + twitter_document.msg_text.count(":o)") + twitter_document.msg_text.count(":]") + twitter_document.msg_text.count(":3") + twitter_document.msg_text.count(":c)") + 2*twitter_document.msg_text.count(":D") + 2*twitter_document.msg_text.count("C:")
+            additional_features["exclamations"] = twitter_document.msg_text.count("!")
+            additional_features["questions"] = twitter_document.msg_text.count("?")
+            additional_features["sadfaces"] = twitter_document.msg_text.count(":(") + twitter_document.msg_text.count(":-(") + twitter_document.msg_text.count(":c") + twitter_document.msg_text.count(":[") + 2*twitter_document.msg_text.count("D8") + twitter_document.msg_text.count("D;") + 2*twitter_document.msg_text.count("D=") + twitter_document.msg_text.count("DX");
+            additional_features["posscore"] = 0
+            additional_features["negscore"] = 0
+            additional_features["objscore"] = 0
+            for word in twitter_document.msg_text.split():
+                for synset in swn.senti_synsets(word):
+                    additional_features["posscore"] += synset.pos_score()
+                    additional_features["negscore"] += synset.neg_score()
+                    additional_features["objscore"] += synset.obj_score()
+            all_additional_features.append(additional_features)
+        self.additional_features = all_additional_features
+        self.additional_features_names = all_additional_feature_names
+
+        return all_additional_features
+
+    def to_sparse_arff_file(self, file_path):
+        with codecs.open(file_path, "wb", "utf-8") as f:
+            f.write("@RELATION opinion\n")
+            for name in self.token_feature_names:
+                f.write("@ATTRIBUTE " + name + " numeric\n");
+
+            for name in self.additional_features_names:
+                f.write("@ATTRIBUTE " + name + " numeric\n");
+
+
+            f.write("@ATTRIBUTE sentimentclass {positive, negative, neutral, objective}\n")
+            f.write("@data\n")
+            for doc_index, feature_vector in enumerate(self.feature_matrix_token_counts):
+                w = "{ "
+                coordinate_vec = feature_vector.tocoo()
+                values = []
+                for i, j, v in itertools.izip(coordinate_vec.row, coordinate_vec.col, coordinate_vec.data):
+                    values.append((j, v));
+                values.sort(key=lambda x: x[0])
+                for v in values:
+                    w += str(v[0]) + " " + str(v[1]) + ", "
+
+                for feature_index, feature_name in enumerate(self.additional_features_names):
+                    w += str(self.amount_of_token_features + feature_index) + " " \
+                         + str(self.additional_features[doc_index][feature_name]) + ", "
+
+                w += str(self.amount_of_token_features + len(self.additional_features_names)) \
+                     + " " + self.twitter_messages[doc_index].polarity
+                w += "}\n"
+                f.write(w)
 
 
 filename = 'semeval_twitter_data.txt'
 
-ids = []
-polarity = []
-text = []
-reader = unicode_csv_reader(open(filename))
-
-print len(text)
-
-stemmer = EnglishStemmer();
-def stem_tokens(tokens, stemmer):
-    stemmed = []
-    for item in tokens:
-        stemmed.append(stemmer.stem(item))
-    return stemmed
-
-
-def tokenize(text):
-    text = "".join([ch for ch in text if ch not in string.punctuation])
-    tokens = nltk.word_tokenize(text)
-    stems = stem_tokens(tokens, stemmer)
-    return stems
-
-base_vectorizer = CountVectorizer(stop_words='english', min_df=1)
-p = base_vectorizer.build_preprocessor();
-t = base_vectorizer.build_tokenizer();
-
-def stemming_analyzer(document):
-    stem_it = stemmer.stem
-    return map(stem_it, t(p(document)))
-
-vectorizer = CountVectorizer(stop_words='english', min_df=4, analyzer=stemming_analyzer)
-# vectorizer = CountVectorizer(stop_words='english', min_df=10)
-
-# vectorizer.get_feature_names()
-
-
-
-features = vectorizer.fit_transform(text)
-print "Features Created: " + str(len(vectorizer.get_feature_names()));
-
-# tfidf_transformer = TfidfTransformer()
-# features = tfidf_transformer.fit_transform(features)
-
-# print X_train_tfidf.shape
-# print type(X_train_tfidf)
-# print X_train_tfidf[2]
-# print features[1]
-# t = vectorizer.transform(text[:1000])
-# t_tf_idf = tfidf_transformer.transform(t)
-# # print vectorizer.transform("I hate this!")
-#
-# clf = svm.SVC(kernel='linear')
-# # clf = GaussianNB()
-# clf.fit(features, polarity)
-# print("classifier trained")
-# print clf.predict(t)
-
-# ef using_tocoo_izip(x):
-#     cx = x.tocoo()
-#     for i,j,v in itertools.izip(cx.row, cx.col, cx.data):
-#         (i,j,v)
-
-def to_sparse_arff(file):
-    file_analytics = open("msg_analytics_pos-neg-obj-scores-normalized.obj")
-    msg_analytics = pickle.load(file_analytics)
-    file_analytics.close()
-    print("Length of msg analytics: " + str(len(msg_analytics)));
-
-    with codecs.open(file, "w", "utf-8") as f:
-        f.write("@RELATION opinion\n")
-        length = len(vectorizer.get_feature_names())
-        for name in vectorizer.get_feature_names():
-            f.write("@ATTRIBUTE " + name + " numeric\n");
-        f.write("@ATTRIBUTE smileyfaces numeric\n");
-        f.write("@ATTRIBUTE sadfaces numeric\n");
-        f.write("@ATTRIBUTE exclamationmarks numeric\n");
-        f.write("@ATTRIBUTE questionmarks numeric\n");
-        f.write("@ATTRIBUTE posscore numeric\n");
-        f.write("@ATTRIBUTE negscore numeric\n");
-        f.write("@ATTRIBUTE objscore numeric\n");
-
-        f.write("@ATTRIBUTE sentimentclass {positive, negative, neutral, objective}\n")
-        f.write("@data\n")
-        for dindex, vec in enumerate(features):
-            w = "{ "
-            cvec = vec.tocoo()
-            values = []
-            for i, j, v in itertools.izip(cvec.row, cvec.col, cvec.data):
-                values.append((j, v));
-            values.sort(key=lambda x: x[0])
-            for v in values:
-                w += str(v[0]) + " " + str(v[1]) + ", "
-            w += str(length) + " " + str(msg_analytics[dindex]["smilies"]) + ", "
-            w += str(length + 1) + " " + str(msg_analytics[dindex]["sadfaces"]) + ", "
-            w += str(length + 2) + " " + str(msg_analytics[dindex]["exclamations"]) + ", "
-            w += str(length + 3) + " " + str(msg_analytics[dindex]["questions"]) + ", "
-            w += str(length + 4) + " " + str(msg_analytics[dindex]["posscore"]) + ", "
-            w += str(length + 5) + " " + str(msg_analytics[dindex]["negscore"]) + ", "
-            w += str(length + 6) + " " + str(msg_analytics[dindex]["objscore"]) + ", "
-            w += str(length + 7) + " " + polarity[dindex]
-            w += "}\n"
-            f.write(w)
-
-
-to_sparse_arff("results-sparse-with-analytics-pos-neg-obj-words-normalized.arff")
-
-# print len(features[0])
-# counter = 0
-# features_list = []
-# # print (features[0].tolist()[0])
-# for index, val in enumerate(features):
-#     list = val.tolist()
-#     # print ids[index]
-#     list.append(polarity[index])
-#     # print list
-#     features_list.append(list)
-#     # if index == 500:
-#     #     break
-#
-#
-# names=vectorizer.get_feature_names()
-# names.append("category")
-#
-# arff.dump("result4.arff", features_list, relation="opinion", names=names)
-
-
-#
-# print len(vectorizer.get_feature_names())
-# for i in vectorizer.get_feature_names():
-#     print i
