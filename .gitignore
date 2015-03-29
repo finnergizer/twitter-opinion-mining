@@ -1,0 +1,4 @@
+*.arff
+*.txt
+.idea/
+*.obj
