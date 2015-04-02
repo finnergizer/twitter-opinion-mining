@@ -1,5 +1,4 @@
-*.arff
-*.txt
+ignore/
 .idea/
 *.obj
 *.pyc
