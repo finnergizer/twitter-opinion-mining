@@ -1,0 +1,648 @@
+<!DOCTYPE html><html>
+
+<head>
+<meta charset="utf-8">
+<title>report</title>
+<style type="text/css">
+body {
+  font-family: Helvetica, arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: white;
+  padding: 30px; }
+
+body > *:first-child {
+  margin-top: 0 !important; }
+body > *:last-child {
+  margin-bottom: 0 !important; }
+
+a {
+  color: #4183C4; }
+a.absent {
+  color: #cc0000; }
+a.anchor {
+  display: block;
+  padding-left: 30px;
+  margin-left: -30px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+  cursor: text;
+  position: relative; }
+
+h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor, h5:hover a.anchor, h6:hover a.anchor {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA09pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoMTMuMCAyMDEyMDMwNS5tLjQxNSAyMDEyLzAzLzA1OjIxOjAwOjAwKSAgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OUM2NjlDQjI4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OUM2NjlDQjM4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo5QzY2OUNCMDg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo5QzY2OUNCMTg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PsQhXeAAAABfSURBVHjaYvz//z8DJYCRUgMYQAbAMBQIAvEqkBQWXI6sHqwHiwG70TTBxGaiWwjCTGgOUgJiF1J8wMRAIUA34B4Q76HUBelAfJYSA0CuMIEaRP8wGIkGMA54bgQIMACAmkXJi0hKJQAAAABJRU5ErkJggg==) no-repeat 10px center;
+  text-decoration: none; }
+
+h1 tt, h1 code {
+  font-size: inherit; }
+
+h2 tt, h2 code {
+  font-size: inherit; }
+
+h3 tt, h3 code {
+  font-size: inherit; }
+
+h4 tt, h4 code {
+  font-size: inherit; }
+
+h5 tt, h5 code {
+  font-size: inherit; }
+
+h6 tt, h6 code {
+  font-size: inherit; }
+
+h1 {
+  font-size: 28px;
+  color: black; }
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #cccccc;
+  color: black; }
+
+h3 {
+  font-size: 18px; }
+
+h4 {
+  font-size: 16px; }
+
+h5 {
+  font-size: 14px; }
+
+h6 {
+  color: #777777;
+  font-size: 14px; }
+
+p, blockquote, ul, ol, dl, li, table, pre {
+  margin: 15px 0; }
+
+hr {
+  background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OENDRjNBN0E2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OENDRjNBN0I2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo4Q0NGM0E3ODY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo4Q0NGM0E3OTY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqqezsUAAAAfSURBVHjaYmRABcYwBiM2QSA4y4hNEKYDQxAEAAIMAHNGAzhkPOlYAAAAAElFTkSuQmCC) repeat-x 0 0;
+  border: 0 none;
+  color: #cccccc;
+  height: 4px;
+  padding: 0;
+}
+
+body > h2:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+body > h1:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+  body > h1:first-child + h2 {
+    margin-top: 0;
+    padding-top: 0; }
+body > h3:first-child, body > h4:first-child, body > h5:first-child, body > h6:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0; }
+
+h1 p, h2 p, h3 p, h4 p, h5 p, h6 p {
+  margin-top: 0; }
+
+li p.first {
+  display: inline-block; }
+li {
+  margin: 0; }
+ul, ol {
+  padding-left: 30px; }
+
+ul :first-child, ol :first-child {
+  margin-top: 0; }
+
+dl {
+  padding: 0; }
+  dl dt {
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+    padding: 0;
+    margin: 15px 0 5px; }
+    dl dt:first-child {
+      padding: 0; }
+    dl dt > :first-child {
+      margin-top: 0; }
+    dl dt > :last-child {
+      margin-bottom: 0; }
+  dl dd {
+    margin: 0 0 15px;
+    padding: 0 15px; }
+    dl dd > :first-child {
+      margin-top: 0; }
+    dl dd > :last-child {
+      margin-bottom: 0; }
+
+blockquote {
+  border-left: 4px solid #dddddd;
+  padding: 0 15px;
+  color: #777777; }
+  blockquote > :first-child {
+    margin-top: 0; }
+  blockquote > :last-child {
+    margin-bottom: 0; }
+
+table {
+  padding: 0;border-collapse: collapse; }
+  table tr {
+    border-top: 1px solid #cccccc;
+    background-color: white;
+    margin: 0;
+    padding: 0; }
+    table tr:nth-child(2n) {
+      background-color: #f8f8f8; }
+    table tr th {
+      font-weight: bold;
+      border: 1px solid #cccccc;
+      margin: 0;
+      padding: 6px 13px; }
+    table tr td {
+      border: 1px solid #cccccc;
+      margin: 0;
+      padding: 6px 13px; }
+    table tr th :first-child, table tr td :first-child {
+      margin-top: 0; }
+    table tr th :last-child, table tr td :last-child {
+      margin-bottom: 0; }
+
+img {
+  max-width: 100%; }
+
+span.frame {
+  display: block;
+  overflow: hidden; }
+  span.frame > span {
+    border: 1px solid #dddddd;
+    display: block;
+    float: left;
+    overflow: hidden;
+    margin: 13px 0 0;
+    padding: 7px;
+    width: auto; }
+  span.frame span img {
+    display: block;
+    float: left; }
+  span.frame span span {
+    clear: both;
+    color: #333333;
+    display: block;
+    padding: 5px 0 0; }
+span.align-center {
+  display: block;
+  overflow: hidden;
+  clear: both; }
+  span.align-center > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: center; }
+  span.align-center span img {
+    margin: 0 auto;
+    text-align: center; }
+span.align-right {
+  display: block;
+  overflow: hidden;
+  clear: both; }
+  span.align-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px 0 0;
+    text-align: right; }
+  span.align-right span img {
+    margin: 0;
+    text-align: right; }
+span.float-left {
+  display: block;
+  margin-right: 13px;
+  overflow: hidden;
+  float: left; }
+  span.float-left span {
+    margin: 13px 0 0; }
+span.float-right {
+  display: block;
+  margin-left: 13px;
+  overflow: hidden;
+  float: right; }
+  span.float-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: right; }
+
+code, tt {
+  margin: 0 2px;
+  padding: 0 5px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px; }
+
+pre code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent; }
+
+.highlight pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px; }
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px; }
+  pre code, pre tt {
+    background-color: transparent;
+    border: none; }
+
+sup {
+    font-size: 0.83em;
+    vertical-align: super;
+    line-height: 0;
+}
+* {
+	-webkit-print-color-adjust: exact;
+}
+@media screen and (min-width: 914px) {
+    body {
+        width: 854px;
+        margin:0 auto;
+    }
+}
+@media print {
+	table, pre {
+		page-break-inside: avoid;
+	}
+	pre {
+		word-wrap: break-word;
+	}
+}
+</style>
+</head>
+<body>
+<h1 id="toc_0">CSI4107 Assignment 2 Report</h1>
+
+<h2 id="toc_1">Part 1</h2>
+
+<p>In the first part of the experiment, we used Python to read the twitter messages from the text file. Using Scikit-learn, a machine learning toolkit for Python, we are able to create a $n*m$ matrix for $n$ documents with  $m$ features of words using a <code>CountVectorizer</code> object.</p>
+
+<p>The <code>CountVectorizer</code> object takes an array of text objects representing documents and creates an appropriate matrix representing the counts of token words for each document. Documents are first preprocessed with a preprocess object, and then tokenized with a tokenizer object. Together, these form an analyzer that is called to process every document. We decided to extend the basic analyzer by stemming all the words produced by the preprocessor and tokenizer using the <code>EnglishStemmer</code> provided by Natural Language Toolkit (NLTK).</p>
+
+<p>Using the matrix created from this preprocessing, tokenization, and stemming, we were then able to produce a sparse arff file for use in Weka. In the sparse arff file, a twitter document is represented by the index of the token in the bag of words list and the count of that token in that document. Tokens are only specified if they are present in the document. This reduces arff file size as features (i.e. words) not present are not included and it is implied that they are 0 for a given document.</p>
+
+<p>With this arff file, the first run in Weka resulted in the following results from a 10-fold cross validation with the three different classifiers:</p>
+
+<p><strong>Decision Tree:</strong></p>
+
+<pre><code>=== Stratified cross-validation ===
+
+Correctly Classified Instances        3455               47.7936 %
+Incorrectly Classified Instances      3774               52.2064 %
+Kappa statistic                          0.2297
+Mean absolute error                      0.28  
+Root mean squared error                  0.4545
+Relative absolute error                 80.8692 %
+Root relative squared error            109.2265 %
+Total Number of Instances             7229     
+
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.692     0.365      0.612     0.692     0.649      0.704    positive
+                 0.354     0.127      0.379     0.354     0.366      0.636    negative
+                 0.224     0.155      0.282     0.224     0.249      0.556    neutral
+                 0.344     0.115      0.351     0.344     0.348      0.641    objective
+Weighted Avg.    0.478     0.239      0.46      0.478     0.467      0.651
+
+
+=== Confusion Matrix ===
+
+    a    b    c    d   &lt;-- classified as
+ 2271  363  387  263 |    a = positive
+  486  458  214  135 |    b = negative
+  634  263  346  304 |    c = neutral
+  319  125  281  380 |    d = objective</code></pre>
+
+<p><strong>Naive Bayes:</strong></p>
+
+<pre><code>=== Stratified cross-validation ===
+
+Correctly Classified Instances        3368               46.5901 %
+Incorrectly Classified Instances      3861               53.4099 %
+Kappa statistic                          0.244 
+Mean absolute error                      0.2824
+Root mean squared error                  0.445 
+Relative absolute error                 81.5583 %
+Root relative squared error            106.9465 %
+Total Number of Instances             7229     
+
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.582     0.279      0.635     0.582     0.607      0.705    positive
+                 0.452     0.183      0.35      0.452     0.395      0.698    negative
+                 0.219     0.13       0.315     0.219     0.258      0.597    neutral
+                 0.482     0.153      0.363     0.482     0.414      0.745    objective
+Weighted Avg.    0.466     0.211      0.474     0.466     0.465      0.687
+
+
+=== Confusion Matrix ===
+
+    a    b    c    d   &lt;-- classified as
+ 1911  596  363  414 |    a = positive
+  369  585  184  155 |    b = negative
+  480  361  339  367 |    c = neutral
+  251  130  191  533 |    d = objective</code></pre>
+
+<p><strong>Support Vector Machine (SMO):</strong></p>
+
+<pre><code>=== Stratified cross-validation ===
+
+Correctly Classified Instances        3698               51.1551 %
+Incorrectly Classified Instances      3531               48.8449 %
+Kappa statistic                          0.2741
+Mean absolute error                      0.3202
+Root mean squared error                  0.4063
+Relative absolute error                 92.476  %
+Root relative squared error             97.6539 %
+Total Number of Instances             7229     
+
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.725     0.36       0.626     0.725     0.672      0.716    positive
+                 0.371     0.103      0.439     0.371     0.402      0.718    negative
+                 0.299     0.162      0.334     0.299     0.316      0.579    neutral
+                 0.338     0.094      0.394     0.338     0.364      0.718    objective
+Weighted Avg.    0.512     0.231      0.495     0.512     0.5        0.688
+
+
+
+=== Confusion Matrix ===
+
+    a    b    c    d   &lt;-- classified as
+ 2382  291  396  215 |    a = positive
+  462  480  253   98 |    b = negative
+  601  223  463  260 |    c = neutral
+  359  100  273  373 |    d = objective</code></pre>
+
+<p><strong>Clearly, the SVM classifier produced the best results with 51.15% correctly classified instances and a precision of 49.5%.</strong></p>
+
+<h2 id="toc_2">Part 2</h2>
+
+<p>When adding features to the bag of words feature set, we first began by counting the amount of smiley-based emoticons and sad-based emoticons. The analysis was carried out on each document using the following code:</p>
+
+<pre><code class="language-python">additional_features[&quot;smilies&quot;] = twitter_document.msg_text.count(&quot;(:&quot;) + twitter_document.msg_text.count(&quot;:)&quot;) + twitter_document.msg_text.count(&quot;:-)&quot;) + twitter_document.msg_text.count(&quot;:o)&quot;) + twitter_document.msg_text.count(&quot;:]&quot;) + twitter_document.msg_text.count(&quot;:3&quot;) + twitter_document.msg_text.count(&quot;:c)&quot;) + 2*twitter_document.msg_text.count(&quot;:D&quot;) + 2*twitter_document.msg_text.count(&quot;C:&quot;)
+additional_features[&quot;exclamations&quot;] = twitter_document.msg_text.count(&quot;!&quot;)
+additional_features[&quot;questions&quot;] = twitter_document.msg_text.count(&quot;?&quot;)
+additional_features[&quot;sadfaces&quot;] = twitter_document.msg_text.count(&quot;):&quot;) + twitter_document.msg_text.count(&quot;:(&quot;) + twitter_document.msg_text.count(&quot;:-(&quot;) + twitter_document.msg_text.count(&quot;:c&quot;) + twitter_document.msg_text.count(&quot;:[&quot;) + 2*twitter_document.msg_text.count(&quot;D8&quot;) + twitter_document.msg_text.count(&quot;D;&quot;) + 2*twitter_document.msg_text.count(&quot;D=&quot;) + twitter_document.msg_text.count(&quot;DX&quot;);</code></pre>
+
+<p>The following emoticons representing smilies were seached for: <code>(: , :) , :-) , o) , :] , :3 , :c , :D, C:</code></p>
+
+<p>The following emoticons representing sad faces were searched for: <code>): , :( , :-( , :c , :[ , D8 , D; , D=, DX</code></p>
+
+<p>In addition, the amount of question marks and exclamations were added to each document as features.</p>
+
+<p>This resulted in the following results from the three classifiers:</p>
+
+<p><strong>Decision Tree:</strong></p>
+
+<pre><code>=== Stratified cross-validation ===
+
+Correctly Classified Instances        3578               49.4951 %
+Incorrectly Classified Instances      3651               50.5049 %
+Kappa statistic                          0.254 
+Mean absolute error                      0.2737
+Root mean squared error                  0.4489
+Relative absolute error                 79.036  %
+Root relative squared error            107.8775 %
+Total Number of Instances             7229     
+
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.716     0.346      0.633     0.716     0.672      0.721    positive
+                 0.351     0.13       0.371     0.351     0.361      0.614    negative
+                 0.262     0.154      0.316     0.262     0.286      0.572    neutral
+                 0.333     0.105      0.364     0.333     0.348      0.633    objective
+Weighted Avg.    0.495     0.229      0.477     0.495     0.484      0.657
+
+
+=== Confusion Matrix ===
+
+    a    b    c    d   &lt;-- classified as
+ 2351  354  358  221 |    a = positive
+  461  454  242  136 |    b = negative
+  566  291  405  285 |    c = neutral
+  336  125  276  368 |    d = objective</code></pre>
+
+<p><strong>Naive Bayes:</strong></p>
+
+<pre><code>=== Stratified cross-validation ===
+
+Correctly Classified Instances        3459               47.8489 %
+Incorrectly Classified Instances      3770               52.1511 %
+Kappa statistic                          0.271 
+Mean absolute error                      0.2747
+Root mean squared error                  0.443 
+Relative absolute error                 79.3219 %
+Root relative squared error            106.4743 %
+Total Number of Instances             7229     
+
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.581     0.224      0.684     0.581     0.628      0.73     positive
+                 0.5       0.198      0.355     0.5       0.415      0.709    negative
+                 0.218     0.124      0.325     0.218     0.261      0.605    neutral
+                 0.512     0.165      0.359     0.512     0.422      0.753    objective
+Weighted Avg.    0.478     0.189      0.499     0.478     0.48       0.703
+
+
+=== Confusion Matrix ===
+
+    a    b    c    d   &lt;-- classified as
+ 1909  613  334  428 |    a = positive
+  303  646  174  170 |    b = negative
+  393  404  338  412 |    c = neutral
+  186  159  194  566 |    d = objective</code></pre>
+
+<p><strong>SVM:</strong>        </p>
+
+<pre><code>=== Stratified cross-validation ===
+
+Correctly Classified Instances        3773               52.1926 %
+Incorrectly Classified Instances      3456               47.8074 %
+Kappa statistic                          0.2935
+Mean absolute error                      0.3183
+Root mean squared error                  0.4041
+Relative absolute error                 91.9333 %
+Root relative squared error             97.1217 %
+Total Number of Instances             7229     
+
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.732     0.33       0.649     0.732     0.688      0.736    positive
+                 0.394     0.107      0.446     0.394     0.419      0.724    negative
+                 0.305     0.165      0.335     0.305     0.32       0.586    neutral
+                 0.351     0.096      0.398     0.351     0.373      0.724    objective
+Weighted Avg.    0.522     0.219      0.507     0.522     0.513      0.7  
+
+
+=== Confusion Matrix ===
+
+    a    b    c    d   &lt;-- classified as
+ 2403  282  391  208 |    a = positive
+  426  510  250  107 |    b = negative
+  555  249  472  271 |    c = neutral
+  321  102  294  388 |    d = objective</code></pre>
+
+<p>As you can see this increased the average precision for all classifiers.  Most notably, the SVM classifier increased from <strong>49.5% to 50.7%.</strong> This classifier continued to be be the most accurate, correctly classifying <strong>3773</strong> twitter messages or 52.2%.</p>
+
+<p>In trying to continue the improvement of the classifiers, we used senti wordnet to add positive, negative, and objective scores for each document. Iterating through each document, each word was analyzed using senti wordnet and the positive, negative, and objective score for the word (in all of the synsets in which it belongs) was added to to total positive, negative and objective score for the document. This was achieved using the following code:</p>
+
+<pre><code class="language-python">for word in twitter_document.msg_text.split():
+    for synset in swn.senti_synsets(word):
+        additional_features[&quot;posscore&quot;] += synset.pos_score()
+        additional_features[&quot;negscore&quot;] += synset.neg_score()
+        additional_features[&quot;objscore&quot;] += synset.obj_score()</code></pre>
+
+<p>3 features were added to the arff file: <code>posscore, negscore, objscore</code></p>
+
+<p>The three classifiers then provided the following results with these new features:</p>
+
+<p><strong>Decision Tree:</strong></p>
+
+<pre><code>=== Stratified cross-validation ===
+
+Correctly Classified Instances        3613               49.9793 %
+Incorrectly Classified Instances      3616               50.0207 %
+Kappa statistic                          0.2636
+Mean absolute error                      0.2698
+Root mean squared error                  0.4552
+Relative absolute error                 77.9164 %
+Root relative squared error            109.3981 %
+Total Number of Instances             7229     
+
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.715     0.332      0.642     0.715     0.676      0.714    positive
+                 0.364     0.125      0.388     0.364     0.376      0.612    negative
+                 0.266     0.156      0.317     0.266     0.289      0.565    neutral
+                 0.348     0.111      0.362     0.348     0.355      0.627    objective
+Weighted Avg.    0.5       0.224      0.484     0.5       0.49       0.651
+
+
+=== Confusion Matrix ===
+
+    a    b    c    d   &lt;-- classified as
+ 2347  344  356  237 |    a = positive
+  442  471  242  138 |    b = negative
+  557  277  411  302 |    c = neutral
+  312  123  286  384 |    d = objective</code></pre>
+
+<p><strong>Naive Bayes</strong>:</p>
+
+<pre><code>=== Stratified cross-validation ===
+
+Correctly Classified Instances        3419               47.2956 %
+Incorrectly Classified Instances      3810               52.7044 %
+Kappa statistic                          0.2739
+Mean absolute error                      0.2728
+Root mean squared error                  0.4476
+Relative absolute error                 78.7973 %
+Root relative squared error            107.5843 %
+Total Number of Instances             7229     
+
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.548     0.183      0.714     0.548     0.62       0.736    positive
+                 0.491     0.191      0.36      0.491     0.415      0.722    negative
+                 0.239     0.136      0.323     0.239     0.275      0.601    neutral
+                 0.555     0.193      0.342     0.555     0.423      0.757    objective
+Weighted Avg.    0.473     0.176      0.51      0.473     0.479      0.708
+
+
+=== Confusion Matrix ===
+
+    a    b    c    d   &lt;-- classified as
+ 1801  606  362  515 |    a = positive
+  242  635  210  206 |    b = negative
+  326  390  370  461 |    c = neutral
+  155  135  202  613 |    d = objective</code></pre>
+
+<p><strong>SVM:</strong></p>
+
+<pre><code>=== Stratified cross-validation ===
+
+Correctly Classified Instances        3792               52.4554 %
+Incorrectly Classified Instances      3437               47.5446 %
+Kappa statistic                          0.2979
+Mean absolute error                      0.3175
+Root mean squared error                  0.4031
+Relative absolute error                 91.7069 %
+Root relative squared error             96.8872 %
+Total Number of Instances             7229     
+
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.731     0.328      0.65      0.731     0.688      0.738    positive
+                 0.398     0.103      0.456     0.398     0.425      0.73     negative
+                 0.31      0.164      0.34      0.31      0.324      0.588    neutral
+                 0.361     0.098      0.4       0.361     0.38       0.728    objective
+Weighted Avg.    0.525     0.218      0.511     0.525     0.516      0.703
+
+
+=== Confusion Matrix ===
+
+    a    b    c    d   &lt;-- classified as
+ 2400  274  392  218 |    a = positive
+  426  514  249  104 |    b = negative
+  550  242  479  276 |    c = neutral
+  318   98  290  399 |    d = objective</code></pre>
+
+<p>Again, we saw an increase in precision and correctly classified instances for all classifiers.  Most notably, the SVM classifier increased from <strong>50.7% to 51.1%.</strong> This classifier continued to be be the most accurate, correctly classifying <strong>3792</strong> twitter messages or 52.45%.</p>
+
+<p>With these results we noticed that combining bag of words with counting exclamations, question marks, smile emoticons, sad emoticons, and analyzing the sentiment of each individual word in a Twitter document can in fact increase precision for classifiers. The remaining investigation tested different features and approaches that did not increase precission past 51.1%.</p>
+
+
+</body>
+
+</html>

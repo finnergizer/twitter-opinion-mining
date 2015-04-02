@@ -6,8 +6,10 @@ import codecs
 import itertools
 import pickle
 import twitter_msg
-import tools
+import tools as vec_tools
 from nltk.corpus import sentiwordnet as swn
+from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import chi2
 
 class Vectorizer:
     def __init__(self):
@@ -17,11 +19,23 @@ class Vectorizer:
         self.amount_of_token_features = 0
         self.additional_features_names = []
         self.additional_features = []
+        #Use univariate statistical tests to determine the best word features
+        self.select_k_best = True;
+        #How many of the best token features to select
+        self.k = 2000;
+        #How many documents a token must appear in before it is considered a feature
+        self.min_df = 2;
+
+        # These are properties used to control the features tested that did not increase results
+        self.filter_url_hashtag_username = False;
+        self.filter_numbers = False;
+        self.uni_bi_gram = False;
+
 
 
     def read_twitter_messages_from_file(self, path_to_file):
         all_twitter_messages = []
-        csv_reader = tools.unicode_csv_reader(open(path_to_file), delimiter='\t')
+        csv_reader = vec_tools.unicode_csv_reader(open(path_to_file), delimiter='\t')
         for row in csv_reader:
             t = twitter_msg.TwitterMessage(row[0], row[1], row[3], row[2])
             all_twitter_messages.append(t)
@@ -47,14 +61,33 @@ class Vectorizer:
 
         #Custom analyzer for Count Vectorizer which stems tokens after preprocessing
         def stemming_analyzer(document):
-            return map(stemmer.stem, tokenizer(preprocessor(document)))
 
-        vectorizer = CountVectorizer(stop_words='english', min_df=4, analyzer=stemming_analyzer)
+            if self.filter_numbers:
+                return [token for token in map(stemmer.stem, tokenizer(preprocessor(document))) if not vec_tools.number_pattern().search(token)]
+            else:
+                return map(stemmer.stem, tokenizer(preprocessor(document)))
+
+        if self.uni_bi_gram:
+            vectorizer = CountVectorizer(stop_words='english', min_df=2, analyzer="char_wb", ngram_range=(1,2))
+        else:
+            vectorizer = CountVectorizer(stop_words='english', min_df=self.min_df, analyzer=stemming_analyzer)
+
 
         all_twitter_msg_text = [t.msg_text for t in self.twitter_messages]
+        all_twitter_msg_polarity = [t.polarity for t in self.twitter_messages]
+
+        if self.filter_url_hashtag_username:
+            vec_tools.filter_url_username_hashtag(all_twitter_msg_text)
+
         self.feature_matrix_token_counts = vectorizer.fit_transform(all_twitter_msg_text)
-        self.token_feature_names = vectorizer.get_feature_names()
-        self.amount_of_token_features = len(self.token_feature_names)
+
+        if self.select_k_best:
+            self.feature_matrix_token_counts = SelectKBest(chi2,self.k).fit_transform(self.feature_matrix_token_counts, all_twitter_msg_polarity)
+            self.token_feature_names = [i for i in range(self.feature_matrix_token_counts.shape[1])]
+            self.amount_of_token_features = self.feature_matrix_token_counts.shape[1]
+        else:
+            self.token_feature_names = vectorizer.get_feature_names()
+            self.amount_of_token_features = len(self.token_feature_names)
 
         return self.feature_matrix_token_counts
 
@@ -65,10 +98,10 @@ class Vectorizer:
                                         "objscore"]
         for document_index, twitter_document in enumerate(self.twitter_messages):
             additional_features = {}
-            additional_features["smilies"] = twitter_document.msg_text.count(":)") + twitter_document.msg_text.count(":-)") + twitter_document.msg_text.count(":o)") + twitter_document.msg_text.count(":]") + twitter_document.msg_text.count(":3") + twitter_document.msg_text.count(":c)") + 2*twitter_document.msg_text.count(":D") + 2*twitter_document.msg_text.count("C:")
+            additional_features["smilies"] = twitter_document.msg_text.count("(:") + twitter_document.msg_text.count(":)") + twitter_document.msg_text.count(":-)") + twitter_document.msg_text.count(":o)") + twitter_document.msg_text.count(":]") + twitter_document.msg_text.count(":3") + twitter_document.msg_text.count(":c)") + 2*twitter_document.msg_text.count(":D") + 2*twitter_document.msg_text.count("C:")
             additional_features["exclamations"] = twitter_document.msg_text.count("!")
             additional_features["questions"] = twitter_document.msg_text.count("?")
-            additional_features["sadfaces"] = twitter_document.msg_text.count(":(") + twitter_document.msg_text.count(":-(") + twitter_document.msg_text.count(":c") + twitter_document.msg_text.count(":[") + 2*twitter_document.msg_text.count("D8") + twitter_document.msg_text.count("D;") + 2*twitter_document.msg_text.count("D=") + twitter_document.msg_text.count("DX");
+            additional_features["sadfaces"] = twitter_document.msg_text.count("):") + twitter_document.msg_text.count(":(") + twitter_document.msg_text.count(":-(") + twitter_document.msg_text.count(":c") + twitter_document.msg_text.count(":[") + 2*twitter_document.msg_text.count("D8") + twitter_document.msg_text.count("D;") + 2*twitter_document.msg_text.count("D=") + twitter_document.msg_text.count("DX");
             additional_features["posscore"] = 0
             additional_features["negscore"] = 0
             additional_features["objscore"] = 0
@@ -86,8 +119,8 @@ class Vectorizer:
     def to_sparse_arff_file(self, file_path):
         with codecs.open(file_path, "wb", "utf-8") as f:
             f.write("@RELATION opinion\n")
-            for name in self.token_feature_names:
-                f.write("@ATTRIBUTE " + name + " numeric\n");
+            for index, name in enumerate(self.token_feature_names):
+                f.write("@ATTRIBUTE " + str(index) + " numeric\n");
 
             for name in self.additional_features_names:
                 f.write("@ATTRIBUTE " + name + " numeric\n");
@@ -115,5 +148,7 @@ class Vectorizer:
                 f.write(w)
 
 
-filename = 'semeval_twitter_data.txt'
 
+filename = 'semeval_twitter_data.txt'
+v = Vectorizer()
+v.read_twitter_messages_from_file(filename)
