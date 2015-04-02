@@ -1,11 +1,11 @@
 #CSI4107 Assignment 2 Report
 Shaughn Finnerty (6300433)
 ##Part 1
-In the first part of the experiment, we used Python to read the twitter messages from the text file. Using Scikit-learn, a machine learning toolkit for Python, we are able to create a $n*m$ matrix for $n$ documents with  $m$ features of words using a `CountVectorizer` object.
+In the first part of the experiment, Python was used to read the twitter messages from the text file. Using Scikit-learn, a machine learning toolkit for Python, we are able to create a $n*m$ matrix for $n$ documents with  $m$ features of words using a `CountVectorizer` object.
 
 The `CountVectorizer` object takes an array of text objects representing documents and creates an appropriate matrix representing the counts of token words for each document. Documents are first preprocessed with a preprocess object, and then tokenized with a tokenizer object. Together, these form an analyzer that is called to process every document. We decided to extend the basic analyzer by stemming all the words produced by the preprocessor and tokenizer using the `EnglishStemmer` provided by Natural Language Toolkit (NLTK).
 
-Using the matrix created from this preprocessing, tokenization, and stemming, we were then able to produce a sparse arff file for use in Weka. In the sparse arff file, a twitter document is represented by the index of the token in the bag of words list and the count of that token in that document. Tokens are only specified if they are present in the document. This reduces arff file size as features (i.e. words) not present are not included and it is implied that they are 0 for a given document.
+Using the matrix created from this preprocessing, tokenization, and stemming, a sparse arff is then able to be produced for use in Weka. In the sparse arff file, a twitter document is represented by the index of the token in the bag of words list and the count of that token in that document. Tokens are only specified if they are present in the document. This reduces arff file size as features (i.e. words) not present are not included and it is implied that they are 0 for a given document.
 
 With this arff file, the first run in Weka resulted in the following results from a 10-fold cross validation with the three different classifiers:
 
@@ -112,7 +112,7 @@ With this arff file, the first run in Weka resulted in the following results fro
 
 ##Emoticons, Question Marks, Exclamation Marks
 
-When adding features to the bag of words feature set, we first began by counting the amount of smiley-based emoticons and sad-based emoticons. The analysis was carried out on each document using the following code:
+When adding features to the bag of words feature set, first begin by counting the amount of smiley-based emoticons and sad-based emoticons. This analysis was carried out on each document using the following code:
 
 ~~~python
 additional_features["smilies"] = twitter_document.msg_text.count("(:") + twitter_document.msg_text.count(":)") + twitter_document.msg_text.count(":-)") + twitter_document.msg_text.count(":o)") + twitter_document.msg_text.count(":]") + twitter_document.msg_text.count(":3") + twitter_document.msg_text.count(":c)") + 2*twitter_document.msg_text.count(":D") + 2*twitter_document.msg_text.count("C:")
@@ -345,9 +345,9 @@ Weighted Avg.    0.525     0.218      0.511     0.525     0.516      0.703
   318   98  290  399 |    d = objective
 ~~~
 
-Again, we saw an increase in precision and correctly classified instances for all classifiers.  Most notably, the SVM classifier increased from **50.7% to 51.1%.** This classifier continued to be be the most accurate, correctly classifying **3792** twitter messages or 52.45%.
+Again, we see an increase in precision and correctly classified instances for all classifiers.  Most notably, the SVM classifier increased from **50.7% to 51.1%.** This classifier continued to be be the most accurate, correctly classifying **3792** twitter messages or 52.45%.
 
-With these results we noticed that combining bag of words with counting exclamations, question marks, smile emoticons, sad emoticons, and analyzing the sentiment of each individual word in a Twitter document can in fact increase precision for classifiers.
+With these results it was noticed that combining bag of words with counting exclamations, question marks, smile emoticons, sad emoticons, and analyzing the sentiment of each individual word in a Twitter document can in fact increase precision for classifiers.
 
 In addition the precision by each class is more balanced with the SVM classifier. This is likely more favorable since the average precision isn't increasing from a class that is constantly being assigned (e.g. positive) and thus resulting in a false precision value. We see an increase in precision for all classes using this classifier, indicating that it is a genuine increase in average precision.
 
@@ -478,7 +478,7 @@ Most notably, we see a large jump in the SVM classifier, jumping from an average
 
 ###n-grams
 
-After reading some papers exploring sentiment analysis, it was seen that using n-grams as features in a bag of words approach can sometimes improve accuracy especially for corpus in which words can be frequently mispelled. We used n-grams created within word boundaries so as to allow for mispellings to occur. In order to do this we used Scikit-learn's CountVectorizer options for creating features of n-grams. The CountVectorizer to do this was created with this command:
+After reading some papers exploring sentiment analysis, it was seen that using n-grams as features in a bag of words approach can sometimes improve accuracy especially for corpus in which words can be frequently mispelled. We used n-grams created within word boundaries so as to allow for mispellings to occur. In order to do this Scikit-learn's CountVectorizer options for creating features of n-grams were used. The CountVectorizer to do this was created with this command:
 
 ~~~python
 vectorizer = CountVectorizer(stop_words='english', min_df=2, analyzer="char_wb", ngram_range=(1,2))
@@ -488,7 +488,7 @@ As a result, unigrams and bi-grams were created as features and their counts wer
 
 We did not perform **SelectKBest** on these n-grams.
 
-Our initial test to see if this would increase precision was using the Naive Bayes classifier with this new data representation for the documents. The stratified cross-validation results became:
+The initial test to see if this would increase precision was using the Naive Bayes classifier with this new data representation for the documents. The stratified cross-validation results became:
 
 ~~~
 === Stratified cross-validation ===
@@ -523,11 +523,11 @@ Weighted Avg.    0.427     0.188      0.467     0.427     0.422      0.664
 
 ~~~
 
-The average precision for this classifier droped from 51.0% to 46.7% (when compared  to the best results retrieved with the Naive Bayes without SelectKBest) and the correctly classified instances dropped from 47% to 42%. With these initial results, it was decided to not continue with unigrams and bigrams as features. While the reason for this drop is unknown it is possible that since the unigrams and bigrams were made out of characters (in an attempt to disambiguate mispellings), that the usefulness that words on their own provided was lost.
+The average precision for this classifier dropped from 51.0% to 46.7% (when compared to the best results retrieved with the Naive Bayes without SelectKBest) and the correctly classified instances dropped from 47% to 42%. With these initial results, it was decided to not continue with unigrams and bigrams as features. While the reason for this drop is unknown it is possible that since the unigrams and bigrams were made out of characters (in an attempt to disambiguate mispellings), that the usefulness that words on their own provided was lost.
 
 ###Normalizing Positive, Negative, Objective Scores
 
-One thing that we noticed when analyzing the positive, negative, and objective scores with Senti Wordnet was that some values, particularly objective score were very high. We decided to see if normalization would make a difference, and so we took the maximum positive, negative, and objective score in the corpus and dividing all other documents' scores by the respective maximum score.
+One thing that was noticed when analyzing the positive, negative, and objective scores with Senti Wordnet was that some values, particularly objective score were very high. It was decided to see if normalization would make a difference. This was done by finding the maximum positive, negative, and objective score in the corpus and dividing all other documents' scores by the respective maximum score.
 
 **This did not impact the accuracy of the classifiers positively**. The decision tree average precision dropped by almost 1%. The Naive Bayes classifier average precission did not change. And the SVM classifier dropped in average precision by 0.3%.
 
@@ -544,7 +544,7 @@ transformer = TfidfTransformer()
 tf_idf_feature_matrix = transform.fit_transform(self.feature_matrix_token_counts)
 ~~~
 
-This tf-idf feature matrix was then used to create a sparse arff file with all of the additional features that contributed to increased precision and it was evaluated in Weka using the Naive Bayes classifier. Due to the initial results from this classifier (decreased precision and correctly classified instances), we did not continue with the lengthier SVM and Decision Tree classifiers.
+This tf-idf feature matrix was then used to create a sparse arff file with all of the additional features that contributed to increased precision and it was evaluated in Weka using the Naive Bayes classifier. Due to the initial results from this classifier (decreased precision and correctly classified instances), it was decided not to continue with the lengthier SVM and Decision Tree classifiers.
 
 ~~~
 === Stratified cross-validation ===
@@ -583,7 +583,7 @@ Since the twitter messages are relatively the same length, the tf-idf normalizin
 
 ##Removing URLs, Hashtags, Usernames
 
-We decidided to experiment with replacing URLs, hashtags, usernames with simply "url, hashtag, userz" respectively. This was done using simple regex substitution that can be found in tools.py. We performed the substitution before the text was analyzed using the `CountVectorizer` so that usernames, urls, or hashtags appearing would only be the feature that is counted and different values for them would not be present as features. However, for the Naive Bayes classifier and the SMO classifier, the average precision and correctly classified instances dropped. Here is an example of the stratified cross-fold validation using SMO on this new data representation.
+The next venture was to experiment with replacing URLs, hashtags, usernames with simply "url, hashtag, userz" respectively. This was done using simple regex substitution that can be found in tools.py.  Substitution was performed before the text was analyzed using the `CountVectorizer` so that usernames, urls, or hashtags appearing would only be the feature that is counted and different values for them would not be present as features. However, for the Naive Bayes classifier and the SMO classifier, the average precision and correctly classified instances dropped. Here is an example of the stratified cross-fold validation using SMO on this new data representation.
 
 ~~~
 === Stratified cross-validation ===
@@ -623,7 +623,7 @@ When 50.8% average precision was compared to an average 51.1% precision without 
 
 The results (predictions) from the best experiment using the counting of question marks, exclamations, emoticons, and positive, negative, and objective scores with the SVM classifier can be found in [results.txt](results/results.txt).
 
-The four sentiment classes being present in the experiment certainly proved to be difficult as the confusion matrices show. Often, messages belong neutral and objective classes were confused with each other (and sometimes positive). It would have been beneficial to the accuracy of the system to possibly merge these classes or remove some of these messages but due to the requirements of the assignment, they were kept in throughotu the entire experiment and a best attempt was made to increase the accuracy of the classifiers. 
+The four sentiment classes being present in the experiment certainly proved to be difficult as the confusion matrices show. Often, messages belong neutral and objective classes were confused with each other (and sometimes positive). It would have been beneficial to the accuracy of the system to possibly merge these classes or remove some of these messages but due to the requirements of the assignment, they were kept in throughout the entire experiment and a best attempt was made to increase the accuracy of the classifiers for all four classes.
 
 The SVM results with SelectKBest features and additional analysis of emoticons, word scores, and punctuation brought a reasonable accuracy of **60.22%** correctly classified instances in a 10-fold cross validation.
 
