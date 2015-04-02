@@ -4,7 +4,6 @@ from sklearn.feature_extraction.text import CountVectorizer
 from nltk.stem.snowball import EnglishStemmer
 import codecs
 import itertools
-import pickle
 import twitter_msg
 import tools as vec_tools
 from nltk.corpus import sentiwordnet as swn
@@ -148,7 +147,16 @@ class Vectorizer:
                 f.write(w)
 
 
+def run():
+    twitter_data_filename = 'semeval_twitter_data.txt'
+    arff_file_save_path = '/Users/shaughnfinnerty/code/school/csi4107/a2/arff/2000best-features-sparse-emoticon-questionmarks-exclamations-posscore-negscore-objscore.arff'
+    v = Vectorizer()
+    v.read_twitter_messages_from_file(twitter_data_filename)
+    # Create the token features
+    v.create_feature_matrix_token_counts()
+    # Create the additional features
+    v.add_additional_features()
+    # Save the arff in sparse format
+    v.to_sparse_arff_file(arff_file_save_path)
 
-filename = 'semeval_twitter_data.txt'
-v = Vectorizer()
-v.read_twitter_messages_from_file(filename)
+run()

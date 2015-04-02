@@ -1,5 +1,5 @@
 #CSI4107 Assignment 2 Report
-
+Shaughn Finnerty (6300433)
 ##Part 1
 In the first part of the experiment, we used Python to read the twitter messages from the text file. Using Scikit-learn, a machine learning toolkit for Python, we are able to create a $n*m$ matrix for $n$ documents with  $m$ features of words using a `CountVectorizer` object.
 
@@ -372,6 +372,36 @@ Best Results:
 **Decision Tree:**
 
 ~~~
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances        3542               48.9971 %
+Incorrectly Classified Instances      3687               51.0029 %
+Kappa statistic                          0.244 
+Mean absolute error                      0.2747
+Root mean squared error                  0.4528
+Relative absolute error                 79.3429 %
+Root relative squared error            108.823  %
+Total Number of Instances             7229     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.718     0.36       0.624     0.718     0.668      0.713    positive
+                 0.353     0.123      0.384     0.353     0.368      0.623    negative
+                 0.239     0.156      0.294     0.239     0.263      0.552    neutral
+                 0.324     0.106      0.355     0.324     0.339      0.63     objective
+Weighted Avg.    0.49      0.235      0.469     0.49      0.477      0.65 
+
+=== Confusion Matrix ===
+
+    a    b    c    d   <-- classified as
+ 2359  327  361  237 |    a = positive
+  454  456  254  129 |    b = negative
+  626  268  369  284 |    c = neutral
+  341  135  271  358 |    d = objective
+
+
 ~~~
 
 **Naive Bayes:**
@@ -440,7 +470,7 @@ Weighted Avg.    0.602     0.201      0.586     0.602     0.588      0.751
   323   68  242  472 |    d = objective
 ~~~
 
-Clearly, using the feature selection tools to keep only the word features that are most useful is a huge step in helping all three classifier's accuracies.
+Clearly, using the feature selection tools to keep only the word features that are most useful is a huge step in helping the Naive Bayes and SVM classifier's accuracies.
 
 Most notably, we see a large jump in the SVM classifier, jumping from an average precision of 51.1 to **58.5%**. In addition the precision for each class increases so there is less of a difference between each class. Thus, there is no single class dominating and providing a falsely high average precision. In addition the correctly classified messages jumps from 3792 (52.45%) to **4353** or **60.22%**.
 
@@ -501,7 +531,7 @@ One thing that we noticed when analyzing the positive, negative, and objective s
 
 **This did not impact the accuracy of the classifiers positively**. The decision tree average precision dropped by almost 1%. The Naive Bayes classifier average precission did not change. And the SVM classifier dropped in average precision by 0.3%.
 
-The results for these classifiers with this data representation via cross-fold validation can be found [here](results/additional/normalizing-pos-neg-obj-scores).
+The results for these classifiers with this data representation via cross-fold validation can be found [here](results/unfavorable/normalizing-pos-neg-obj-scores).
 
 ###Tf-Idf Weights
 
@@ -588,3 +618,47 @@ Weighted Avg.    0.508     0.235      0.49      0.508     0.496      0.685
 ~~~
 
 When 50.8% average precision was compared to an average 51.1% precision without the `SelectKBest` step it was deemed that the values of usernames, hashtags, and URLs sometimes provide relevant information for classifying twitter sentiment and so should be kept during the bag of words tokenization step. In addition the amount of correctly classified instances dropped by almost 2% without this information.
+
+#Conclusions & Notes
+
+The results (predictions) from the best experiment using the counting of question marks, exclamations, emoticons, and positive, negative, and objective scores with the SVM classifier can be found in [results.txt](results/results.txt).
+
+The four sentiment classes being present in the experiment certainly proved to be difficult as the confusion matrices show. Often, messages belong neutral and objective classes were confused with each other (and sometimes positive). It would have been beneficial to the accuracy of the system to possibly merge these classes or remove some of these messages but due to the requirements of the assignment, they were kept in throughotu the entire experiment and a best attempt was made to increase the accuracy of the classifiers. 
+
+The SVM results with SelectKBest features and additional analysis of emoticons, word scores, and punctuation brought a reasonable accuracy of **60.22%** correctly classified instances in a 10-fold cross validation.
+
+All the while, other strategies (e.g. n-grams) were implemented and explored to determine the effect on results.
+
+#Dependencies 
+
+- [Scikit-learn](http://scikit-learn.org/dev/install.html)
+- [NLTK](http://www.nltk.org/install.html)
+- Both of these require the basic python scientific libraies:
+	- [numpy](http://www.scipy.org/install.html#individual-packages)
+	- [scipy](http://www.scipy.org/install.html#individual-packages)
+- Once installed, NLTK SentiWordNet and WordNet data must be installed.
+	- From a python interpreter run the commands:
+
+	~~~python
+	import nltk
+	nltk.download()
+	~~~
+
+	Go to all packages in the window prompt that opens and download the packages identified as `wordnet` and `sentiwordnet`.
+
+#Running
+
+In the `vectorization.py` file `run()` method, you may need to change the following code:
+
+	arff_file_save_path = '/Users/shaughnfinnerty/code/school/csi4107/a2/arff/2000best-features-sparse-emoticon-questionmarks-exclamations-posscore-negscore-objscore.arff'
+
+To match a file of your choice in which you want to save the arff file. Currently the vectorizer creates the arff file with the features that lead to the best SVM classifier results as discussed. However, you can enable some boolean values to create arff files for some of the approaches mentioned that did not increase results by changing the `__init__` method of the Vectorizer class here:
+
+~~~python
+# These are properties used to control the features tested that did not increase results
+self.filter_url_hashtag_username = False;
+self.filter_numbers = False;
+self.uni_bi_gram = False;
+~~~
+
+Other than that, simply run `python vectorization.py` and your arff file will be created with the data representation that lead to the best classification results.

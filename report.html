@@ -302,13 +302,152 @@ sup {
 	}
 }
 </style>
+<style type="text/css">
+/**
+ * prism.js default theme for JavaScript, CSS and HTML
+ * Based on dabblet (http://dabblet.com)
+ * @author Lea Verou
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+	color: black;
+	text-shadow: 0 1px white;
+	font-family: Consolas, Monaco, 'Andale Mono', monospace;
+	direction: ltr;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	line-height: 1.5;
+
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+
+pre[class*="language-"]::-moz-selection, pre[class*="language-"] ::-moz-selection,
+code[class*="language-"]::-moz-selection, code[class*="language-"] ::-moz-selection {
+	text-shadow: none;
+	background: #b3d4fc;
+}
+
+pre[class*="language-"]::selection, pre[class*="language-"] ::selection,
+code[class*="language-"]::selection, code[class*="language-"] ::selection {
+	text-shadow: none;
+	background: #b3d4fc;
+}
+
+@media print {
+	code[class*="language-"],
+	pre[class*="language-"] {
+		text-shadow: none;
+	}
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+	padding: 1em;
+	margin: .5em 0;
+	overflow: auto;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	background: #f5f2f0;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+	padding: .1em;
+	border-radius: .3em;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+	color: slategray;
+}
+
+.token.punctuation {
+	color: #999;
+}
+
+.namespace {
+	opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+	color: #905;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+	color: #690;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+	color: #a67f59;
+	background: hsla(0, 0%, 100%, .5);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+	color: #07a;
+}
+
+.token.function {
+	color: #DD4A68;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+	color: #e90;
+}
+
+.token.important,
+.token.bold {
+	font-weight: bold;
+}
+.token.italic {
+	font-style: italic;
+}
+
+.token.entity {
+	cursor: help;
+}
+</style>
 </head>
 <body>
 <h1 id="toc_0">CSI4107 Assignment 2 Report</h1>
 
+<p>Shaughn Finnerty (6300433)</p>
+
 <h2 id="toc_1">Part 1</h2>
 
-<p>In the first part of the experiment, we used Python to read the twitter messages from the text file. Using Scikit-learn, a machine learning toolkit for Python, we are able to create a $n*m$ matrix for $n$ documents with  $m$ features of words using a <code>CountVectorizer</code> object.</p>
+<p>In the first part of the experiment, we used Python to read the twitter messages from the text file. Using Scikit-learn, a machine learning toolkit for Python, we are able to create a \(n*m\) matrix for \(n\) documents with  \(m\) features of words using a <code>CountVectorizer</code> object.</p>
 
 <p>The <code>CountVectorizer</code> object takes an array of text objects representing documents and creates an appropriate matrix representing the counts of token words for each document. Documents are first preprocessed with a preprocess object, and then tokenized with a tokenizer object. Together, these form an analyzer that is called to process every document. We decided to extend the basic analyzer by stemming all the words produced by the preprocessor and tokenizer using the <code>EnglishStemmer</code> provided by Natural Language Toolkit (NLTK).</p>
 
@@ -416,6 +555,8 @@ Weighted Avg.    0.512     0.231      0.495     0.512     0.5        0.688
 <p><strong>Clearly, the SVM classifier produced the best results with 51.15% correctly classified instances and a precision of 49.5%.</strong></p>
 
 <h2 id="toc_2">Part 2</h2>
+
+<h2 id="toc_3">Emoticons, Question Marks, Exclamation Marks</h2>
 
 <p>When adding features to the bag of words feature set, we first began by counting the amount of smiley-based emoticons and sad-based emoticons. The analysis was carried out on each document using the following code:</p>
 
@@ -530,6 +671,8 @@ Weighted Avg.    0.522     0.219      0.507     0.522     0.513      0.7
 
 <p>As you can see this increased the average precision for all classifiers.  Most notably, the SVM classifier increased from <strong>49.5% to 50.7%.</strong> This classifier continued to be be the most accurate, correctly classifying <strong>3773</strong> twitter messages or 52.2%.</p>
 
+<h3 id="toc_4">SentiWordNet for Positive, Negative, Objective Scores</h3>
+
 <p>In trying to continue the improvement of the classifiers, we used senti wordnet to add positive, negative, and objective scores for each document. Iterating through each document, each word was analyzed using senti wordnet and the positive, negative, and objective score for the word (in all of the synsets in which it belongs) was added to to total positive, negative and objective score for the document. This was achieved using the following code:</p>
 
 <pre><code class="language-python">for word in twitter_document.msg_text.split():
@@ -640,9 +783,321 @@ Weighted Avg.    0.525     0.218      0.511     0.525     0.516      0.703
 
 <p>Again, we saw an increase in precision and correctly classified instances for all classifiers.  Most notably, the SVM classifier increased from <strong>50.7% to 51.1%.</strong> This classifier continued to be be the most accurate, correctly classifying <strong>3792</strong> twitter messages or 52.45%.</p>
 
-<p>With these results we noticed that combining bag of words with counting exclamations, question marks, smile emoticons, sad emoticons, and analyzing the sentiment of each individual word in a Twitter document can in fact increase precision for classifiers. The remaining investigation tested different features and approaches that did not increase precission past 51.1%.</p>
+<p>With these results we noticed that combining bag of words with counting exclamations, question marks, smile emoticons, sad emoticons, and analyzing the sentiment of each individual word in a Twitter document can in fact increase precision for classifiers.</p>
+
+<p>In addition the precision by each class is more balanced with the SVM classifier. This is likely more favorable since the average precision isn&#39;t increasing from a class that is constantly being assigned (e.g. positive) and thus resulting in a false precision value. We see an increase in precision for all classes using this classifier, indicating that it is a genuine increase in average precision.</p>
+
+<h3 id="toc_5">Feature Selection with \(Chi^2\)</h3>
+
+<p>The final alteration that proved to increase precision and correctly classified instances significantly was using feature selection techniques on the word features (i.e. reducing the dimensionality of the feature vectors by selecting the features that are most representative).</p>
+
+<p>Scikit-learn provides various feature selection tools. The one that was used for this experiment was the <code>SelectKBest</code> class. This class removes all but the <code>k</code> highest scoring features when analyzed using a specific scoring function (in our experiment, we used the <code>chi2</code> scoring function. The analysis is based on univariate statistical tests that determines the &quot;usefulness&quot; of the feature for classification and this part is often considered part of the preprocessing. The dimensionality was reduced to 2000 word features using the following Python code:</p>
+
+<pre><code class="language-python">#Note that self.k = 2000
+self.feature_matrix_token_counts = SelectKBest(chi2,self.k).fit_transform(self.feature_matrix_token_counts, all_twitter_msg_polarity)
+self.token_feature_names = [i for i in range(self.feature_matrix_token_counts.shape[1])]
+self.amount_of_token_features = self.feature_matrix_token_counts.shape[1]</code></pre>
+
+<p>Unfortunately the names of the features (i.e. the words) could not be preserved in this matrix so they were renamed just by their index in the feature vector. Additional features (i.e. emoticons, positive, negative, objective scores, exclamation counts, and question mark counts) were added to support these newly chosen tokens (as they had previously shown to improve the other experiments). The final results for these classifiers was much better than before:</p>
+
+<h2 id="toc_6">Best Results:</h2>
+
+<p><strong>Decision Tree:</strong></p>
+
+<pre><code>=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances        3542               48.9971 %
+Incorrectly Classified Instances      3687               51.0029 %
+Kappa statistic                          0.244 
+Mean absolute error                      0.2747
+Root mean squared error                  0.4528
+Relative absolute error                 79.3429 %
+Root relative squared error            108.823  %
+Total Number of Instances             7229     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.718     0.36       0.624     0.718     0.668      0.713    positive
+                 0.353     0.123      0.384     0.353     0.368      0.623    negative
+                 0.239     0.156      0.294     0.239     0.263      0.552    neutral
+                 0.324     0.106      0.355     0.324     0.339      0.63     objective
+Weighted Avg.    0.49      0.235      0.469     0.49      0.477      0.65 
+
+=== Confusion Matrix ===
+
+    a    b    c    d   &lt;-- classified as
+ 2359  327  361  237 |    a = positive
+  454  456  254  129 |    b = negative
+  626  268  369  284 |    c = neutral
+  341  135  271  358 |    d = objective
+
+</code></pre>
+
+<p><strong>Naive Bayes:</strong></p>
+
+<pre><code>=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances        3476               48.0841 %
+Incorrectly Classified Instances      3753               51.9159 %
+Kappa statistic                          0.2838
+Mean absolute error                      0.2705
+Root mean squared error                  0.4433
+Relative absolute error                 78.1104 %
+Root relative squared error            106.5535 %
+Total Number of Instances             7229     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.558     0.183      0.718     0.558     0.628      0.74     positive
+                 0.5       0.183      0.373     0.5       0.427      0.73     negative
+                 0.243     0.133      0.333     0.243     0.281      0.608    neutral
+                 0.561     0.194      0.342     0.561     0.425      0.762    objective
+Weighted Avg.    0.481     0.174      0.516     0.481     0.487      0.714
+
+=== Confusion Matrix ===
+
+    a    b    c    d   &lt;-- classified as
+ 1833  574  357  520 |    a = positive
+  236  647  202  208 |    b = negative
+  328  380  376  463 |    c = neutral
+  157  133  195  620 |    d = objective</code></pre>
+
+<p><strong>SMO:</strong></p>
+
+<pre><code>=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances        4353               60.2158 %
+Incorrectly Classified Instances      2876               39.7842 %
+Kappa statistic                          0.4022
+Mean absolute error                      0.3034
+Root mean squared error                  0.3866
+Relative absolute error                 87.622  %
+Root relative squared error             92.9087 %
+Total Number of Instances             7229     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.823     0.332      0.674     0.823     0.741      0.771    positive
+                 0.475     0.071      0.594     0.475     0.528      0.793    negative
+                 0.364     0.119      0.454     0.364     0.404      0.655    neutral
+                 0.427     0.077      0.502     0.427     0.461      0.777    objective
+Weighted Avg.    0.602     0.201      0.586     0.602     0.588      0.751
+
+=== Confusion Matrix ===
+
+    a    b    c    d   &lt;-- classified as
+ 2704  192  242  146 |    a = positive
+  412  614  193   74 |    b = negative
+  575  160  563  249 |    c = neutral
+  323   68  242  472 |    d = objective</code></pre>
+
+<p>Clearly, using the feature selection tools to keep only the word features that are most useful is a huge step in helping the Naive Bayes and SVM classifier&#39;s accuracies.</p>
+
+<p>Most notably, we see a large jump in the SVM classifier, jumping from an average precision of 51.1 to <strong>58.5%</strong>. In addition the precision for each class increases so there is less of a difference between each class. Thus, there is no single class dominating and providing a falsely high average precision. In addition the correctly classified messages jumps from 3792 (52.45%) to <strong>4353</strong> or <strong>60.22%</strong>.</p>
+
+<h2 id="toc_7">Other Features Explored</h2>
+
+<h3 id="toc_8">n-grams</h3>
+
+<p>After reading some papers exploring sentiment analysis, it was seen that using n-grams as features in a bag of words approach can sometimes improve accuracy especially for corpus in which words can be frequently mispelled. We used n-grams created within word boundaries so as to allow for mispellings to occur. In order to do this we used Scikit-learn&#39;s CountVectorizer options for creating features of n-grams. The CountVectorizer to do this was created with this command:</p>
+
+<pre><code class="language-python">vectorizer = CountVectorizer(stop_words=&#39;english&#39;, min_df=2, analyzer=&quot;char_wb&quot;, ngram_range=(1,2))</code></pre>
+
+<p>As a result, unigrams and bi-grams were created as features and their counts were recorded throughout the corpus for each document. <em>We also added the additional features that were shown to improve precision in the previous results shown.</em></p>
+
+<p>We did not perform <strong>SelectKBest</strong> on these n-grams.</p>
+
+<p>Our initial test to see if this would increase precision was using the Naive Bayes classifier with this new data representation for the documents. The stratified cross-validation results became:</p>
+
+<pre><code>=== Stratified cross-validation ===
+
+Correctly Classified Instances        3087               42.703  %
+Incorrectly Classified Instances      4142               57.297  %
+Kappa statistic                          0.2207
+Mean absolute error                      0.2879
+Root mean squared error                  0.5093
+Relative absolute error                 83.1383 %
+Root relative squared error            122.4172 %
+Total Number of Instances             7229     
 
 
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.479     0.197      0.669     0.479     0.558      0.682    positive
+                 0.567     0.265      0.318     0.567     0.407      0.683    negative
+                 0.112     0.083      0.27      0.112     0.159      0.57     neutral
+                 0.548     0.215      0.315     0.548     0.4        0.723    objective
+Weighted Avg.    0.427     0.188      0.467     0.427     0.422      0.664
+
+
+=== Confusion Matrix ===
+
+    a    b    c    d   &lt;-- classified as
+ 1574  841  259  610 |    a = positive
+  235  733  102  223 |    b = negative
+  372  515  174  486 |    c = neutral
+  172  217  110  606 |    d = objective
+</code></pre>
+
+<p>The average precision for this classifier droped from 51.0% to 46.7% (when compared  to the best results retrieved with the Naive Bayes without SelectKBest) and the correctly classified instances dropped from 47% to 42%. With these initial results, it was decided to not continue with unigrams and bigrams as features. While the reason for this drop is unknown it is possible that since the unigrams and bigrams were made out of characters (in an attempt to disambiguate mispellings), that the usefulness that words on their own provided was lost.</p>
+
+<h3 id="toc_9">Normalizing Positive, Negative, Objective Scores</h3>
+
+<p>One thing that we noticed when analyzing the positive, negative, and objective scores with Senti Wordnet was that some values, particularly objective score were very high. We decided to see if normalization would make a difference, and so we took the maximum positive, negative, and objective score in the corpus and dividing all other documents&#39; scores by the respective maximum score.</p>
+
+<p><strong>This did not impact the accuracy of the classifiers positively</strong>. The decision tree average precision dropped by almost 1%. The Naive Bayes classifier average precission did not change. And the SVM classifier dropped in average precision by 0.3%.</p>
+
+<p>The results for these classifiers with this data representation via cross-fold validation can be found <a href="results/unfavorable/normalizing-pos-neg-obj-scores">here</a>.</p>
+
+<h3 id="toc_10">Tf-Idf Weights</h3>
+
+<p>Similar results were seen when using Tf-Idf weights for the frequency of a word/token in the bag of words feature matrix. The Tf-Idf representation was simply achieved using the Scikit-learn <code>TfidfTransformer</code> object. </p>
+
+<p>It was created using the following python code:</p>
+
+<pre><code class="language-python">transformer = TfidfTransformer()
+tf_idf_feature_matrix = transform.fit_transform(self.feature_matrix_token_counts)</code></pre>
+
+<p>This tf-idf feature matrix was then used to create a sparse arff file with all of the additional features that contributed to increased precision and it was evaluated in Weka using the Naive Bayes classifier. Due to the initial results from this classifier (decreased precision and correctly classified instances), we did not continue with the lengthier SVM and Decision Tree classifiers.</p>
+
+<pre><code>=== Stratified cross-validation ===
+
+Correctly Classified Instances        2869               39.6874 %
+Incorrectly Classified Instances      4360               60.3126 %
+Kappa statistic                          0.2018
+Mean absolute error                      0.3015
+Root mean squared error                  0.5468
+Relative absolute error                 87.0684 %
+Root relative squared error            131.4066 %
+Total Number of Instances             7229     
+
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.389     0.136      0.705     0.389     0.501      0.694    positive
+                 0.65      0.372      0.276     0.65      0.387      0.692    negative
+                 0.109     0.074      0.286     0.109     0.157      0.563    neutral
+                 0.527     0.195      0.328     0.527     0.404      0.726    objective
+Weighted Avg.    0.397     0.174      0.481     0.397     0.392      0.671
+
+
+=== Confusion Matrix ===
+
+    a    b    c    d   &lt;-- classified as
+ 1278 1223  225  558 |    a = positive
+  177  841  105  170 |    b = negative
+  243  670  168  466 |    c = neutral
+  116  318   89  582 |    d = objective
+</code></pre>
+
+<p>Since the twitter messages are relatively the same length, the tf-idf normalizing weight should not be too crucial for this experiment.</p>
+
+<h2 id="toc_11">Removing URLs, Hashtags, Usernames</h2>
+
+<p>We decidided to experiment with replacing URLs, hashtags, usernames with simply &quot;url, hashtag, userz&quot; respectively. This was done using simple regex substitution that can be found in tools.py. We performed the substitution before the text was analyzed using the <code>CountVectorizer</code> so that usernames, urls, or hashtags appearing would only be the feature that is counted and different values for them would not be present as features. However, for the Naive Bayes classifier and the SMO classifier, the average precision and correctly classified instances dropped. Here is an example of the stratified cross-fold validation using SMO on this new data representation.</p>
+
+<pre><code>=== Stratified cross-validation ===
+
+Correctly Classified Instances        3669               50.7539 %
+Incorrectly Classified Instances      3560               49.2461 %
+Kappa statistic                          0.2673
+Mean absolute error                      0.3203
+Root mean squared error                  0.4066
+Relative absolute error                 92.5093 %
+Root relative squared error             97.7135 %
+Total Number of Instances             7229     
+
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.723     0.368      0.621     0.723     0.668      0.713    positive
+                 0.376     0.106      0.437     0.376     0.404      0.718    negative
+                 0.282     0.162      0.322     0.282     0.3        0.577    neutral
+                 0.337     0.092      0.398     0.337     0.365      0.715    objective
+Weighted Avg.    0.508     0.235      0.49      0.508     0.496      0.685
+
+
+=== Confusion Matrix ===
+
+    a    b    c    d   &lt;-- classified as
+ 2375  297  395  217 |    a = positive
+  488  486  240   79 |    b = negative
+  608  237  436  266 |    c = neutral
+  356   93  284  372 |    d = objective</code></pre>
+
+<p>When 50.8% average precision was compared to an average 51.1% precision without the <code>SelectKBest</code> step it was deemed that the values of usernames, hashtags, and URLs sometimes provide relevant information for classifying twitter sentiment and so should be kept during the bag of words tokenization step. In addition the amount of correctly classified instances dropped by almost 2% without this information.</p>
+
+<h1 id="toc_12">Conclusions &amp; Notes</h1>
+
+<p>The results (predictions) from the best experiment using the counting of question marks, exclamations, emoticons, and positive, negative, and objective scores with the SVM classifier can be found in <a href="results/results.txt">results.txt</a>.</p>
+
+<p>The four sentiment classes being present in the experiment certainly proved to be difficult as the confusion matrices show. Often, messages belong neutral and objective classes were confused with each other (and sometimes positive). It would have been beneficial to the accuracy of the system to possibly merge these classes or remove some of these messages but due to the requirements of the assignment, they were kept in throughotu the entire experiment and a best attempt was made to increase the accuracy of the classifiers. </p>
+
+<p>The SVM results with SelectKBest features and additional analysis of emoticons, word scores, and punctuation brought a reasonable accuracy of <strong>60.22%</strong> correctly classified instances in a 10-fold cross validation.</p>
+
+<p>All the while, other strategies (e.g. n-grams) were implemented and explored to determine the effect on results.</p>
+
+<h1 id="toc_13">Dependencies</h1>
+
+<ul>
+<li><a href="http://scikit-learn.org/dev/install.html">Scikit-learn</a></li>
+<li><a href="http://www.nltk.org/install.html">NLTK</a></li>
+<li>Both of these require the basic python scientific libraies:
+
+<ul>
+<li><a href="http://www.scipy.org/install.html#individual-packages">numpy</a></li>
+<li><a href="http://www.scipy.org/install.html#individual-packages">scipy</a></li>
+</ul></li>
+<li><p>Once installed, NLTK SentiWordNet and WordNet data must be installed.</p>
+
+<ul>
+<li>From a python interpreter run the commands:</li>
+</ul>
+
+<pre><code class="language-python">import nltk
+nltk.download()</code></pre>
+
+<p>Go to all packages in the window prompt that opens and download the packages identified as <code>wordnet</code> and <code>sentiwordnet</code>.</p></li>
+</ul>
+
+<h1 id="toc_14">Running</h1>
+
+<p>In the <code>vectorization.py</code> file <code>run()</code> method, you may need to change the following code:</p>
+
+<pre><code>arff_file_save_path = &#39;/Users/shaughnfinnerty/code/school/csi4107/a2/arff/2000best-features-sparse-emoticon-questionmarks-exclamations-posscore-negscore-objscore.arff&#39;</code></pre>
+
+<p>To match a file of your choice in which you want to save the arff file. Currently the vectorizer creates the arff file with the features that lead to the best SVM classifier results as discussed. However, you can enable some boolean values to create arff files for some of the approaches mentioned that did not increase results by changing the <code>__init__</code> method of the Vectorizer class here:</p>
+
+<pre><code class="language-python"># These are properties used to control the features tested that did not increase results
+self.filter_url_hashtag_username = False;
+self.filter_numbers = False;
+self.uni_bi_gram = False;</code></pre>
+
+<p>Other than that, simply run <code>python vectorization.py</code> and your arff file will be created with the data representation that lead to the best classification results.</p>
+
+<script type="text/javascript">
+self="undefined"!=typeof window?window:"undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?self:{};var Prism=function(){var e=/\blang(?:uage)?-(?!\*)(\w+)\b/i,t=self.Prism={util:{encode:function(e){return e instanceof n?new n(e.type,t.util.encode(e.content),e.alias):"Array"===t.util.type(e)?e.map(t.util.encode):e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\u00a0/g," ")},type:function(e){return Object.prototype.toString.call(e).match(/\[object (\w+)\]/)[1]},clone:function(e){var n=t.util.type(e);switch(n){case"Object":var a={};for(var r in e)e.hasOwnProperty(r)&&(a[r]=t.util.clone(e[r]));return a;case"Array":return e.map(function(e){return t.util.clone(e)})}return e}},languages:{extend:function(e,n){var a=t.util.clone(t.languages[e]);for(var r in n)a[r]=n[r];return a},insertBefore:function(e,n,a,r){r=r||t.languages;var i=r[e];if(2==arguments.length){a=arguments[1];for(var l in a)a.hasOwnProperty(l)&&(i[l]=a[l]);return i}var s={};for(var o in i)if(i.hasOwnProperty(o)){if(o==n)for(var l in a)a.hasOwnProperty(l)&&(s[l]=a[l]);s[o]=i[o]}return t.languages.DFS(t.languages,function(t,n){n===r[e]&&t!=e&&(this[t]=s)}),r[e]=s},DFS:function(e,n,a){for(var r in e)e.hasOwnProperty(r)&&(n.call(e,r,e[r],a||r),"Object"===t.util.type(e[r])?t.languages.DFS(e[r],n):"Array"===t.util.type(e[r])&&t.languages.DFS(e[r],n,r))}},highlightAll:function(e,n){for(var a,r=document.querySelectorAll('code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'),i=0;a=r[i++];)t.highlightElement(a,e===!0,n)},highlightElement:function(a,r,i){for(var l,s,o=a;o&&!e.test(o.className);)o=o.parentNode;if(o&&(l=(o.className.match(e)||[,""])[1],s=t.languages[l]),s){a.className=a.className.replace(e,"").replace(/\s+/g," ")+" language-"+l,o=a.parentNode,/pre/i.test(o.nodeName)&&(o.className=o.className.replace(e,"").replace(/\s+/g," ")+" language-"+l);var u=a.textContent;if(u){u=u.replace(/^(?:\r?\n|\r)/,"");var g={element:a,language:l,grammar:s,code:u};if(t.hooks.run("before-highlight",g),r&&self.Worker){var c=new Worker(t.filename);c.onmessage=function(e){g.highlightedCode=n.stringify(JSON.parse(e.data),l),t.hooks.run("before-insert",g),g.element.innerHTML=g.highlightedCode,i&&i.call(g.element),t.hooks.run("after-highlight",g)},c.postMessage(JSON.stringify({language:g.language,code:g.code}))}else g.highlightedCode=t.highlight(g.code,g.grammar,g.language),t.hooks.run("before-insert",g),g.element.innerHTML=g.highlightedCode,i&&i.call(a),t.hooks.run("after-highlight",g)}}},highlight:function(e,a,r){var i=t.tokenize(e,a);return n.stringify(t.util.encode(i),r)},tokenize:function(e,n){var a=t.Token,r=[e],i=n.rest;if(i){for(var l in i)n[l]=i[l];delete n.rest}e:for(var l in n)if(n.hasOwnProperty(l)&&n[l]){var s=n[l];s="Array"===t.util.type(s)?s:[s];for(var o=0;o<s.length;++o){var u=s[o],g=u.inside,c=!!u.lookbehind,f=0,h=u.alias;u=u.pattern||u;for(var p=0;p<r.length;p++){var d=r[p];if(r.length>e.length)break e;if(!(d instanceof a)){u.lastIndex=0;var m=u.exec(d);if(m){c&&(f=m[1].length);var y=m.index-1+f,m=m[0].slice(f),v=m.length,k=y+v,b=d.slice(0,y+1),w=d.slice(k+1),N=[p,1];b&&N.push(b);var O=new a(l,g?t.tokenize(m,g):m,h);N.push(O),w&&N.push(w),Array.prototype.splice.apply(r,N)}}}}}return r},hooks:{all:{},add:function(e,n){var a=t.hooks.all;a[e]=a[e]||[],a[e].push(n)},run:function(e,n){var a=t.hooks.all[e];if(a&&a.length)for(var r,i=0;r=a[i++];)r(n)}}},n=t.Token=function(e,t,n){this.type=e,this.content=t,this.alias=n};if(n.stringify=function(e,a,r){if("string"==typeof e)return e;if("Array"===t.util.type(e))return e.map(function(t){return n.stringify(t,a,e)}).join("");var i={type:e.type,content:n.stringify(e.content,a,r),tag:"span",classes:["token",e.type],attributes:{},language:a,parent:r};if("comment"==i.type&&(i.attributes.spellcheck="true"),e.alias){var l="Array"===t.util.type(e.alias)?e.alias:[e.alias];Array.prototype.push.apply(i.classes,l)}t.hooks.run("wrap",i);var s="";for(var o in i.attributes)s+=o+'="'+(i.attributes[o]||"")+'"';return"<"+i.tag+' class="'+i.classes.join(" ")+'" '+s+">"+i.content+"</"+i.tag+">"},!self.document)return self.addEventListener?(self.addEventListener("message",function(e){var n=JSON.parse(e.data),a=n.language,r=n.code;self.postMessage(JSON.stringify(t.util.encode(t.tokenize(r,t.languages[a])))),self.close()},!1),self.Prism):self.Prism;var a=document.getElementsByTagName("script");return a=a[a.length-1],a&&(t.filename=a.src,document.addEventListener&&!a.hasAttribute("data-manual")&&document.addEventListener("DOMContentLoaded",t.highlightAll)),self.Prism}();"undefined"!=typeof module&&module.exports&&(module.exports=Prism);
+</script>
+<script type="text/javascript">
+Prism.languages.python={comment:{pattern:/(^|[^\\])#.*?(\r?\n|$)/,lookbehind:!0},string:/"""[\s\S]+?"""|'''[\s\S]+?'''|("|')(\\?.)*?\1/,keyword:/\b(as|assert|break|class|continue|def|del|elf|else|except|exec|finally|for|from|global|if|import|in|is|lambda|pass|print|raise|return|try|while|with|yield)\b/,"boolean":/\b(True|False)\b/,number:/\b-?(0[box])?(?:[\da-f]+\.?\d*|\.\d+)(?:e[+-]?\d+)?j?\b/i,operator:/[-+]|<=?|>=?|!|={1,2}|&{1,2}|\|?\||\?|\*|\/|~|\^|%|\b(or|and|not)\b/,punctuation:/[{}[\];(),.:]/};
+</script>
+<script type="text/x-mathjax-config">
+if (typeof MathJaxListener !== 'undefined') {
+  MathJax.Hub.Register.StartupHook('End', function () {
+    MathJaxListener.invokeCallbackForKey_('End');
+  });
+}
+</script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 
 </html>
